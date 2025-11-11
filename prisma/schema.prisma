@@ -15,7 +15,7 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  id            String    @id @map("_id")
   name          String
   email         String
   emailVerified Boolean   @default(false)
@@ -58,7 +58,7 @@ model Session {
   updatedAt DateTime @updatedAt
   ipAddress String?
   userAgent String?
-  userId    String   @db.ObjectId
+  userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   impersonatedBy String?
@@ -71,7 +71,7 @@ model Account {
   id                    String    @id @map("_id")
   accountId             String
   providerId            String
-  userId                String    @db.ObjectId
+  userId                String
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
@@ -101,7 +101,7 @@ model TwoFactor {
   id          String @id @map("_id")
   secret      String
   backupCodes String
-  userId      String @db.ObjectId
+  userId      String
   user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("twoFactor")
@@ -111,7 +111,7 @@ model Passkey {
   id           String    @id @map("_id")
   name         String?
   publicKey    String
-  userId       String    @db.ObjectId
+  userId       String
   user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   credentialID String
   counter      Int
@@ -146,7 +146,7 @@ model Company {
   sentiment   String?
   healthScore Float?  @default(50)
 
-  ownerId String? @db.ObjectId
+  ownerId String?
   owner   User?   @relation("CompanyOwner", fields: [ownerId], references: [id])
 
   contacts      Contact[]
@@ -156,7 +156,7 @@ model Company {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  userId    String?  @db.ObjectId
+  userId    String?
   user      User?    @relation(fields: [userId], references: [id])
 
   @@index([ownerId])
@@ -187,7 +187,7 @@ model Contact {
   aiInsights      Json?
   predictedIntent String?
 
-  createdById String? @db.ObjectId
+  createdById String?
   createdBy   User?   @relation("ContactCreator", fields: [createdById], references: [id])
 
   deals      Deal[]
@@ -196,7 +196,7 @@ model Contact {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   user      User?    @relation(fields: [userId], references: [id])
-  userId    String?  @db.ObjectId
+  userId    String?
 
   @@map("contacts")
 }
@@ -221,7 +221,7 @@ model Deal {
   primaryContactId String?  @db.ObjectId
   primaryContact   Contact? @relation(fields: [primaryContactId], references: [id])
 
-  assignedToId String? @db.ObjectId
+  assignedToId String?
   assignedTo   User?   @relation("AssignedDeals", fields: [assignedToId], references: [id])
 
   expectedCloseDate DateTime?
@@ -233,7 +233,7 @@ model Deal {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   user      User?    @relation(fields: [userId], references: [id])
-  userId    String?  @db.ObjectId
+  userId    String?
 
   @@map("deals")
 }
@@ -258,7 +258,7 @@ model Activity {
   dealId String? @db.ObjectId
   deal   Deal?   @relation(fields: [dealId], references: [id])
 
-  userId String @db.ObjectId
+  userId String
   user   User   @relation(fields: [userId], references: [id])
 
   scheduledAt DateTime?
@@ -299,7 +299,7 @@ model AIInteraction {
   tokens   Int?
   cost     Float?
 
-  userId String @db.ObjectId
+  userId String
   user   User   @relation(fields: [userId], references: [id])
 
   context  Json?
@@ -318,7 +318,7 @@ model Notification {
   priority String  @default("normal")
   read     Boolean @default(false)
 
-  userId String @db.ObjectId
+  userId String
   user   User   @relation(fields: [userId], references: [id])
 
   metadata  Json?
