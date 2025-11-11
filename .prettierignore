@@ -1,0 +1,9 @@
+/node_modules
+/prisma
+/public
+.next
+.vscode
+dist/
+build/
+coverage/
+tsconfig.json
