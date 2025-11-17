@@ -131,15 +131,25 @@ model Company {
   industry    String?
   size        String?
   revenue     Float?
-  location    String?
   description String?
   website     String?
   phone       String?
+  logo        String?
+  location    String?
+  founded     Int?
 
-  linkedin       String?
+  linkedin String?
+  twitter  String?
+  facebook String?
+
   technographics Json?
-  socialProfiles Json?
   firmographics  Json?
+
+  parentId     String?   @db.ObjectId
+  parent       Company?  @relation("CompanyHierarchy", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subsidiaries Company[] @relation("CompanyHierarchy")
+
+  customFields Json?
 
   aiScore     Float?  @default(0)
   aiInsights  Json?
@@ -159,9 +169,8 @@ model Company {
   userId    String?
   user      User?    @relation(fields: [userId], references: [id])
 
-  @@index([ownerId])
   @@index([industry])
-  @@index([createdAt])
+  @@index([ownerId])
   @@map("companies")
 }
 
